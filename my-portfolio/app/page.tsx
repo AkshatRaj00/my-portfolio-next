@@ -245,7 +245,7 @@ const HeroSection = () => {
           }}
           className="inline-block"
         >
-          👨‍💻
+          
         </motion.span>
       </motion.h1>
 
