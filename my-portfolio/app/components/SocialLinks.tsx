@@ -1,6 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 
 const socialLinks = [
@@ -56,6 +57,16 @@ const socialLinks = [
 
 const SocialLinks = () => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [particlePositions, setParticlePositions] = useState([]);
+
+  useState(() => {
+    setParticlePositions(
+      [...Array(6)].map(() => ({
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+      }))
+    );
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -189,14 +200,11 @@ const SocialLinks = () => {
 
                     {/* Floating Particles */}
                     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                      {[...Array(4)].map((_, i) => (
+                      {particlePositions.map((pos, i) => (
                         <motion.div
                           key={i}
                           className="absolute w-1 h-1 bg-white rounded-full opacity-0 group-hover:opacity-60"
-                          style={{
-                            left: `${Math.random() * 100}%`,
-                            top: `${Math.random() * 100}%`,
-                          }}
+                          style={pos}
                           animate={hoveredIndex === index ? {
                             opacity: [0, 1, 0],
                             scale: [0, 1.5, 0],
@@ -213,18 +221,18 @@ const SocialLinks = () => {
                     </div>
 
                     {/* Border Animation */}
-                    <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${link.hoverColor} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} 
-                         style={{ 
-                           background: `linear-gradient(45deg, transparent, ${link.hoverColor.includes('purple') ? '#8b5cf6' : link.hoverColor.includes('blue') ? '#3b82f6' : '#ec4899'}, transparent)`,
-                           maskImage: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                           maskComposite: 'xor',
-                           padding: '2px'
-                         }}>
+                    <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${link.hoverColor} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+                          style={{
+                              background: `linear-gradient(45deg, transparent, ${link.hoverColor.includes('purple') ? '#8b5cf6' : link.hoverColor.includes('blue') ? '#3b82f6' : '#ec4899'}, transparent)`,
+                              maskImage: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                              maskComposite: 'xor',
+                              padding: '2px'
+                          }}>
                     </div>
-                  </div>
 
-                  {/* 3D Shadow/Depth */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${link.color} rounded-2xl opacity-0 group-hover:opacity-40 blur-xl transition-all duration-500 -z-10 transform translate-y-2 group-hover:translate-y-4`}></div>
+                    {/* 3D Shadow/Depth */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${link.color} rounded-2xl opacity-0 group-hover:opacity-40 blur-xl transition-all duration-500 -z-10 transform translate-y-2 group-hover:translate-y-4`}></div>
+                  </div>
                 </div>
               </Link>
             </motion.div>
@@ -246,11 +254,11 @@ const SocialLinks = () => {
           {/* Animated Pulse Indicator */}
           <motion.div
             className="flex items-center justify-center gap-2"
-            animate={{ 
+            animate={{
               scale: [1, 1.05, 1],
               opacity: [0.7, 1, 0.7]
             }}
-            transition={{ 
+            transition={{
               duration: 2,
               repeat: Infinity,
               repeatType: "reverse"
